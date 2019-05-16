@@ -1,0 +1,12 @@
+{
+  "name": "@ng-bucket/forms",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ng-bucket/ng-bucket.git"
+  },
+  "peerDependencies": {
+    "@angular/forms": ">= 6.x.x < 8.x.x",
+    "rxjs": ">=6.x.x"
+  }
+}
