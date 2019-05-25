@@ -1,0 +1,15 @@
+import { AbstractControl } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { FormObserverStateEvent } from './form-observer-state-event';
+export declare function pristineChanges$(control: AbstractControl): Observable<boolean>;
+export declare function dirtyChanges$(control: AbstractControl): Observable<boolean>;
+export declare function touchedChanges$(control: AbstractControl): Observable<boolean>;
+export declare function untouchedChanges$(control: AbstractControl): Observable<boolean>;
+export declare function statusChanges$(control: AbstractControl): Observable<string>;
+export declare function enabledChanges$(control: AbstractControl): Observable<boolean>;
+export declare function disabledChanges$(control: AbstractControl): Observable<boolean>;
+export declare function pendingChanges$(control: AbstractControl): Observable<boolean>;
+export declare function validChanges$(control: AbstractControl): Observable<boolean>;
+export declare function invalidChanges$(control: AbstractControl): Observable<boolean>;
+export declare function valueChanges$(control: AbstractControl): Observable<any>;
+export declare function stateChanges$(control: AbstractControl): Observable<FormObserverStateEvent>;
