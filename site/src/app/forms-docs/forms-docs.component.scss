@@ -1,0 +1,20 @@
+@import "../../variables";
+
+mat-sidenav-container {
+  height: calc(100vh - 64px);
+}
+
+mat-sidenav {
+  min-width: 200px;
+}
+
+mat-sidenav-content {
+  padding: 1rem;
+}
+
+a[mat-list-item] {
+  &.active {
+    background-color: mat-color($primary, lighter);
+    color: mat-color($primary, darker);
+  }
+}
