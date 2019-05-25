@@ -7,6 +7,7 @@ I hope one day I will be able to deprecated this libraries in favor to native so
 
 # @ng-bucket/forms
 This package tends to help when working with Reactive Forms.
+Provided API allows to observe all form state changes, including `pristine` / `dirty` and `touched` / `untouched`, which current native API dose not support.
 
 ### Installation
 `npm i @ng-bucket/forms`
