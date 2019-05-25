@@ -1,4 +1,4 @@
-# Ng Bucket - Forms
+# ng-bucket - Forms
 
 This package includes:
 1. [Form observer](https://github.com/ng-bucket/ng-bucket/blob/master/docs/form-observer.md)
