@@ -18,6 +18,13 @@ invalidChanges$   | `AbstractControl.invalid`   | `Observable<boolean>`
 valueChanges$     | `AbstractControl.value`     | `Observable<any>`
 stateChanges$     | _all properties_            | `Observable<FormObserverStateEvent>`
 
+## Installation
+`npm i @ng-bucket/forms`
+
+Peer dependencies:
+ * `@angular/forms` >= 6
+ * `rxjs` >= 6
+
 ## Usage
 ```typescript
 import {
