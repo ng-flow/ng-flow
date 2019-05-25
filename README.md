@@ -7,7 +7,6 @@ I hope one day I will be able to deprecated this libraries in favor to native so
 
 # @ng-bucket/forms
 This package tends to help when working with Reactive Forms.
-Provided API allows to observe all form state changes, including `pristine` / `dirty` and `touched` / `untouched`, which current native API dose not support.
 
 ### Installation
 `npm i @ng-bucket/forms`
@@ -17,6 +16,6 @@ Peer dependencies:
  * `rxjs` >= 6
 
 ### Documentation:
-1. [Form observer](./docs/form-observer.md)
+1. [Form observer](./docs/form-observer.md) - allows to observe all form state changes, including `pristine` / `dirty` and `touched` / `untouched`, which current native API dose not support.
 2. Form types (TBD)
 3. Form dirty value extractor (TBD)
