@@ -1,7 +1,11 @@
-import { AbstractControl } from '@angular/forms';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 
 export type TypedForm<T> = {
-  [K in keyof T]: AbstractControl
+  [P in keyof T]: T[P] extends Array<any>
+    ? FormArray | FormControl
+    : T[P] extends object
+      ? FormGroup | FormControl
+      : FormControl;
 }
 
 export function keyOf<T>(key: keyof T): keyof T {
