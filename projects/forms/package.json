@@ -13,7 +13,7 @@
     "touched",
     "untouched"
   ],
-  "version": "1.0.2",
+  "version": "1.1.0",
   "peerDependencies": {
     "@angular/forms": ">= 6.x.x < 8.x.x",
     "rxjs": ">=6.x.x"
