@@ -1,10 +1,10 @@
 import { AbstractControl, FormArray, FormControl, FormGroup } from '@angular/forms';
 
 export function dirtyValues<T>(control: FormGroup): T;
-export function dirtyValues<T>(control: FormArray): T[];
+export function dirtyValues<T>(control: FormArray): T;
 export function dirtyValues<T>(control: FormControl): T | undefined;
-export function dirtyValues<T>(control: AbstractControl): T | T[] | undefined;
-export function dirtyValues<T>(control: AbstractControl): T | T[] | undefined {
+export function dirtyValues<T>(control: AbstractControl): T | T | undefined;
+export function dirtyValues<T>(control: AbstractControl): T | T | undefined {
   if (control instanceof FormGroup) {
     const value = {};
     Object.keys(control.controls)
@@ -22,7 +22,7 @@ export function dirtyValues<T>(control: AbstractControl): T | T[] | undefined {
         value.push(dirtyValues(control));
       });
 
-    return value;
+    return value as any as T;
   } else {
     return control.dirty ? control.value : undefined;
   }

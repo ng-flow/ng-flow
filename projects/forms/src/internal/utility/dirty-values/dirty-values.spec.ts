@@ -1,5 +1,5 @@
 import { AbstractControl, FormArray, FormControl, FormGroup } from '@angular/forms';
-import { keyOf, TypedForm } from '../types/typed-form';
+import { keyOf, TypedForm } from '../../types/typed-form';
 import { dirtyValues } from './dirty-values';
 
 describe('dirtyValues', () => {
@@ -26,7 +26,7 @@ describe('dirtyValues', () => {
       control.markAsDirty();
 
       expect(formGroup.dirty).toBeTruthy();
-      expect(dirtyValues(formGroup)).toEqual({field1: 'NEW_VALUE'});
+      expect(dirtyValues(formGroup)).toEqual({field: 'NEW_VALUE'});
     });
   });
 

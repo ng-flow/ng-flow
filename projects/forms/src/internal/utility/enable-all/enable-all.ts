@@ -1,6 +1,6 @@
 import { AbstractControl, FormArray, FormGroup } from '@angular/forms';
 
-export function enableAll<T>(control: AbstractControl, opt?: { emitEvents: boolean }): void {
+export function enableAll(control: AbstractControl, opts?: { onlySelf?: boolean; emitEvent?: boolean; }): void {
   if (control.disabled) {
     if (control instanceof FormGroup) {
       Object.keys(control.controls)
@@ -15,7 +15,7 @@ export function enableAll<T>(control: AbstractControl, opt?: { emitEvents: boole
           enableAll(control);
         });
     } else {
-      control.enable({emitEvent: opt.emitEvents});
+      control.enable(opts);
     }
   }
 }

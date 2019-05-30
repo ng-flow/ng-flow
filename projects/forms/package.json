@@ -8,10 +8,18 @@
     "angular",
     "reactive forms",
     "forms",
+    "AbstractControl",
+    "FormControl",
+    "FormGroup",
+    "FormArray",
     "pristine",
     "dirty",
     "touched",
-    "untouched"
+    "untouched",
+    "enable",
+    "enableAll",
+    "dirtyValue",
+    "dirtyValues"
   ],
   "version": "1.1.1",
   "peerDependencies": {

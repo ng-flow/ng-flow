@@ -18,6 +18,6 @@ export {
 } from './internal/form-observer/form-observer';
 
 export { FormObserverStateEvent } from './internal/form-observer/form-observer-state-event';
-export { enableAll } from './internal/enable-all/enable-all';
-export { dirtyValues } from './internal/dirty-values/dirty-values';
+export { enableAll } from './internal/utility/enable-all/enable-all';
+export { dirtyValues } from './internal/utility/dirty-values/dirty-values';
 export { TypedForm, keyOf } from './internal/types/typed-form';
