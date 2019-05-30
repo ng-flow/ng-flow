@@ -1,7 +1,7 @@
 # Form utility methods
 
 ## dirtyValues
-Iterate recursively over form controls children and pick ups values if particular form control is dirty. 
+Iterate recursively over form controls children and pick ups value only if particular form control is dirty. 
 
 ### API
 ```typescript
