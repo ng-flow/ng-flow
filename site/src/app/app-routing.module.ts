@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: 'forms',
-    loadChildren: './forms-docs/forms-docs.module#FormsDocsModule',
+    loadChildren: () => import('./forms-docs/forms-docs.module').then(m => m.FormsDocsModule),
   },
   {
     path: '',
