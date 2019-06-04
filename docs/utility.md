@@ -7,8 +7,7 @@ Iterate recursively over form controls children and pick ups value only if parti
 ```typescript
 import { dirtyValues } from '@ng-bucket/forms'
 
-dirtyValues<T>(control: FormGroup): T
-dirtyValues<T>(control: FormArray): T
+dirtyValues<T>(control: FormGroup | FormArray): T
 dirtyValues<T>(control: FormControl): T | undefined
 dirtyValues<T>(control: AbstractControl): T | T | undefined
 ```

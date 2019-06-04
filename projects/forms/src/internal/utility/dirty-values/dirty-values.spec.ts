@@ -5,7 +5,8 @@ import { dirtyValues } from './dirty-values';
 describe('dirtyValues', () => {
   describe('#FormGroup', () => {
     let formGroup: FormGroup;
-    type FormModel = { field: string }
+
+    interface FormModel {field: string}
 
     beforeEach(() => {
       const controls: TypedForm<FormModel> = {

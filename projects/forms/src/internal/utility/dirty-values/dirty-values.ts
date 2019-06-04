@@ -1,7 +1,6 @@
 import { AbstractControl, FormArray, FormControl, FormGroup } from '@angular/forms';
 
-export function dirtyValues<T>(control: FormGroup): T;
-export function dirtyValues<T>(control: FormArray): T;
+export function dirtyValues<T>(control: FormGroup | FormArray): T;
 export function dirtyValues<T>(control: FormControl): T | undefined;
 export function dirtyValues<T>(control: AbstractControl): T | T | undefined;
 export function dirtyValues<T>(control: AbstractControl): T | T | undefined {
@@ -17,9 +16,9 @@ export function dirtyValues<T>(control: AbstractControl): T | T | undefined {
   } else if (control instanceof FormArray) {
     const value = [];
     control.controls
-      .filter(control => control.dirty)
-      .forEach(control => {
-        value.push(dirtyValues(control));
+      .filter(c => c.dirty)
+      .forEach(c => {
+        value.push(dirtyValues(c));
       });
 
     return value as any as T;

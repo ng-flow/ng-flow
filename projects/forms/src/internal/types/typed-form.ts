@@ -6,7 +6,7 @@ export type TypedForm<T> = {
     : T[P] extends object
       ? FormGroup | FormControl
       : FormControl;
-}
+};
 
 export function keyOf<T>(key: keyof T): keyof T {
   return key;

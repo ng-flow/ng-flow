@@ -10,9 +10,9 @@ export function enableAll(control: AbstractControl, opts?: { onlySelf?: boolean;
         });
     } else if (control instanceof FormArray) {
       control.controls
-        .filter(control => control.disabled)
-        .forEach(control => {
-          enableAll(control);
+        .filter(c => c.disabled)
+        .forEach(c => {
+          enableAll(c);
         });
     } else {
       control.enable(opts);
