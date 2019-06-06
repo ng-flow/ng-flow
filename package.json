@@ -2,6 +2,9 @@
   "name": "ng-bucket",
   "version": "0.0.0",
   "scripts": {
+    "lint": "lerna run lint --stream",
+    "test:ci": "lerna run test --stream -- -- --watch false --browsers ChromeHeadless",
+    "build": "lerna run build --stream",
     "gh-pages": "ng build --prod --base-href \"/ng-bucket/\" && ngh --dir=dist/site",
     "release": "lerna publish --contents dist"
   },

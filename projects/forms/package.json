@@ -27,6 +27,9 @@
     "rxjs": ">=6.x.x"
   },
   "scripts": {
+    "lint": "ng lint forms",
+    "test": "ng test forms",
+    "build": "ng build forms",
     "copy:dist": "cp-cli ../../dist/forms dist",
     "remove:dist": "rm-cli -r -s dist",
     "prepublish": "ng lint forms && ng test forms --watch false",
