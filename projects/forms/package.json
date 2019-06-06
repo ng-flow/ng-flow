@@ -21,9 +21,20 @@
     "dirtyValue",
     "dirtyValues"
   ],
-  "version": "1.1.2",
+  "version": "1.1.3",
   "peerDependencies": {
     "@angular/forms": ">= 6.x.x <= 8.x.x",
     "rxjs": ">=6.x.x"
+  },
+  "scripts": {
+    "copy:dist": "cp-cli ../../dist/forms dist",
+    "remove:dist": "rm-cli -r -s dist",
+    "prepublish": "ng lint forms && ng test forms --watch false",
+    "prepare": "ng build forms",
+    "prepublishOnly": "npm run remove:dist && npm run copy:dist",
+    "postpublish": "npm run remove:dist"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
