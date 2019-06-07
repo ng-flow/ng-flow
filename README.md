@@ -19,7 +19,7 @@ Peer dependencies:
 
 ### Documentation:
 1. [Form observer](./docs/form-observer.md) - allows to observe all form state changes, including `pristine` / `dirty` and `touched` / `untouched`, which current native API dose not support.
-2. Form types (TBD)
+2. [Form types](./docs/typed-form.md)
 3. [Form utility methods](./docs/utility.md)
     * [dirtyValues](./docs/utility.md#dirtyValues)
     * [enableAll](./docs/utility.md#enableAll)
