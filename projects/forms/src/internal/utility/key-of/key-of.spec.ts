@@ -1,6 +1,6 @@
 import { keyOf } from './key-of';
 
-type FormModel = {
+interface FormModel {
   prop: string
 }
 
