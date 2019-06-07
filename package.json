@@ -6,6 +6,7 @@
     "test:ci": "lerna run test --stream -- -- --watch false --browsers ChromeHeadless",
     "build": "lerna run build --stream",
     "gh-pages": "ng build --prod --base-href \"/ng-bucket/\" && ngh --dir=dist/site",
+    "prerelease": "npm run lint && npm run test:ci",
     "release": "lerna publish --contents dist"
   },
   "private": true,
