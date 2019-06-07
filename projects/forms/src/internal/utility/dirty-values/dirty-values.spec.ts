@@ -1,5 +1,6 @@
 import { AbstractControl, FormArray, FormControl, FormGroup } from '@angular/forms';
-import { keyOf, TypedForm } from '../../types/typed-form';
+import { TypedForm } from '../../types/typed-form';
+import { keyOf } from '../key-of/key-of';
 import { dirtyValues } from './dirty-values';
 
 describe('dirtyValues', () => {

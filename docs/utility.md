@@ -47,6 +47,10 @@ console.log(dirtyValues(formGroup));
 //}
 ```
 
+
+
+
+
 ## enableAll
 Enable control and all of it children
 
@@ -83,4 +87,47 @@ console.log(formGroup.get('lastName').disabled); //true
 console.log(formGroup.get('contact').enabled); //true
 console.log(formGroup.get('contact.email').enabled); //true
 console.log(formGroup.get('contact.phone').enabled); //true
+```
+
+
+
+
+
+## keyOf
+Type safe access to FormGroup children
+
+### API
+```typescript
+import { keyOf } from '@ng-bucket/forms'
+
+keyOf<T>(key: keyof T): keyof T
+```
+
+### Usage
+```typescript
+import { keyOf } from '@ng-bucket/forms'
+
+interface FormModel {
+  firstName: string;
+  lastName: string;
+  contact: {
+    email: string;
+    phone: string;
+  }
+}
+
+const formGroup = new FormGroup({
+  firstName: new FormControl('Jon'),
+  lastName: new FormControl('Doe'),
+  contact: new FormGroup({
+    email: new FormControl('jon.doe@email.com'),
+    phone: new FormControl('111-111-111'),
+  }),
+});
+
+formGroup.get(keyOf<FormModel>('firstName'));
+formGroup.get(keyOf<FormModel>('lastName'));
+const contact = formGroup.get(keyOf<FormModel>('contact')) as FormGroup;
+contact.get(keyOf<FormModel['contact']>('email'));
+contact.get(keyOf<FormModel['contact']>('phone'));
 ```
