@@ -23,4 +23,4 @@ Peer dependencies:
 3. [Form utility methods](./docs/utility.md)
     * [dirtyValues](./docs/utility.md#dirtyValues)
     * [enableAll](./docs/utility.md#enableAll)
-
+    * [keyOf](./docs/utility.md#keyOf)
