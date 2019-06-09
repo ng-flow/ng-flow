@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.2.0](https://github.com/ng-bucket/ng-bucket/compare/v1.1.3...v1.2.0) (2019-06-09)
+
+
+### Bug Fixes
+
+* **forms:** fixed linting of keyOf() tests ([e56bf28](https://github.com/ng-bucket/ng-bucket/commit/e56bf28))
+* lint & tests should run before lerna version ([5d959ea](https://github.com/ng-bucket/ng-bucket/commit/5d959ea))
+
+
+### Features
+
+* **forms:** angular 8 support ([d16ccdb](https://github.com/ng-bucket/ng-bucket/commit/d16ccdb))
+* **forms:** keyOf utility method ([5aa0dba](https://github.com/ng-bucket/ng-bucket/commit/5aa0dba))
+
+
+
+
+
+
 ## [1.1.3](https://github.com/ng-bucket/ng-bucket/compare/v1.1.2...v1.1.3) (2019-06-01)
 
 **Note:** Version bump only for package ng-bucket
