@@ -9,9 +9,6 @@
       "conventionalCommits": true,
       "push": true,
       "allowBranch": "next"
-    },
-    "publish": {
-      "allowBranch": "master"
     }
   }
 }

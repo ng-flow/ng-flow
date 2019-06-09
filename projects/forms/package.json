@@ -30,11 +30,8 @@
     "lint": "ng lint forms",
     "test": "ng test forms",
     "build": "ng build forms",
-    "copy:dist": "cp-cli ../../dist/forms dist",
-    "remove:dist": "rm-cli -r -s dist",
-    "prepare": "ng build forms",
-    "prepublishOnly": "npm run remove:dist && npm run copy:dist",
-    "postpublish": "npm run remove:dist"
+    "prepublish" : "npm run build",
+    "publish" : "npm publish ../../dist/forms"
   },
   "publishConfig": {
     "access": "public"
