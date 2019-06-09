@@ -16,9 +16,9 @@ cache: npm
 script:
   - npm run lerna:lint
   - npm run lerna:test:ci
-  - npm run lerna:build
 
 before_deploy:
+  - npm run lerna:build
   - echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" >> $HOME/.npmrc 2> /dev/null
 
 deploy:
@@ -26,5 +26,5 @@ deploy:
   script: npm run lerna:publish:ci
   skip_cleanup: true
   on:
-    branch: master
+    condition: $TRAVIS_BRANCH = master
     tags: true
