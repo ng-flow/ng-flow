@@ -7,7 +7,7 @@
     "lerna:test:ci": "lerna run test --stream -- -- --watch false --browsers ChromeHeadless",
     "lerna:build": "lerna run build --stream",
     "lerna:version": "lerna version",
-    "lerna:publish:ci": "lerna publish from-git --contents dist"
+    "lerna:publish": "lerna run publish --stream"
   },
   "private": true,
   "dependencies": {
@@ -40,7 +40,6 @@
     "@types/node": "~8.9.4",
     "angular-cli-ghpages": "^0.5.3",
     "codelyzer": "^5.1.0",
-    "cp-cli": "^2.0.0",
     "husky": "^2.4.0",
     "jasmine-core": "~2.99.1",
     "jasmine-marbles": "^0.5.0",
@@ -53,7 +52,6 @@
     "lerna": "^3.14.1",
     "ng-packagr": "^5.3.0",
     "protractor": "~5.4.0",
-    "rm-cli": "^1.4.2",
     "ts-node": "~7.0.0",
     "tsickle": ">=0.34.0",
     "tslib": "^1.9.0",

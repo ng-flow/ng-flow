@@ -8,23 +8,9 @@ sudo: required
 addons:
   chrome: stable
 
-before_install:
-  - npm i -g npm@6.9.0
-
 cache: npm
 
 script:
   - npm run lerna:lint
   - npm run lerna:test:ci
-
-before_deploy:
   - npm run lerna:build
-  - echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" >> $HOME/.npmrc 2> /dev/null
-
-deploy:
-  provider: script
-  script: npm run lerna:publish:ci
-  skip_cleanup: true
-  on:
-    condition: $TRAVIS_BRANCH = master
-    tags: true
