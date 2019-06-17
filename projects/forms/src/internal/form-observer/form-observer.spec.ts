@@ -1,5 +1,5 @@
 import { FormControl } from '@angular/forms';
-import { subscription } from '../test/test-subscription';
+import { subscription } from '@testing/test-subscription';
 import {
   dirtyChanges$,
   disabledChanges$,

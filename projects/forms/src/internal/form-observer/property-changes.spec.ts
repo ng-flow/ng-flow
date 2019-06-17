@@ -1,4 +1,4 @@
-import { subscription } from '../test/test-subscription';
+import { subscription } from '@testing/test-subscription';
 import { propertyChanges } from './property-changes';
 
 interface TestObject {

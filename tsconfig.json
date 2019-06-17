@@ -21,6 +21,12 @@
     "paths": {
       "@ng-bucket/forms": [
         "dist/forms"
+      ],
+      "@ng-bucket/local-store": [
+        "dist/local-store"
+      ],
+      "@testing/*": [
+        "testing/*"
       ]
     }
   }

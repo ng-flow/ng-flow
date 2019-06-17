@@ -6,20 +6,11 @@
   "repository": "git@github.com:ng-bucket/ng-bucket.git",
   "keywords": [
     "angular",
-    "reactive forms",
-    "forms",
-    "AbstractControl",
-    "FormControl",
-    "FormGroup",
-    "FormArray",
-    "pristine",
-    "dirty",
-    "touched",
-    "untouched",
-    "enable",
-    "enableAll",
-    "dirtyValue",
-    "dirtyValues"
+    "store",
+    "local",
+    "local store",
+    "state",
+    "state management"
   ],
   "version": "1.2.0",
   "peerDependencies": {
