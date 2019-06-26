@@ -32,9 +32,9 @@ describe('LocalStore', () => {
 
   it('should register actions', () => {
     const testAction = localStore.action<number>('Action', {
-      state: (state, action) => ({
-        value: action.payload,
-        isEven: action.payload % 2 === 0,
+      state: (state, value) => ({
+        value,
+        isEven: value % 2 === 0,
       }),
     });
 
@@ -55,21 +55,21 @@ describe('LocalStore', () => {
 
     const action1 = localStore.action('Action 1', {
       action: pipe(
-        tap(action => subject.next(action.type)),
+        tap(() => subject.next('Action 1')),
         map(() => action2.create()),
       ),
     });
 
     const action2 = localStore.action('Action 2', {
       action: pipe(
-        tap(action => subject.next(action.type)),
+        tap(() => subject.next('Action 2')),
         map(() => action3.create()),
       ),
     });
 
     const action3 = localStore.action('Action 3', {
       action: pipe(
-        tap(action => subject.next(action.type)),
+        tap(() => subject.next('Action 3')),
         noAction(),
       ),
     });

@@ -48,7 +48,7 @@ export class HostService {
         loading: true,
       }),
       action: pipe(
-        switchMap(action => this.http.get<HostData>(`data/${action.payload}`).pipe(
+        switchMap(id => this.http.get<HostData>(`data/${id}`).pipe(
           map(data => this.loadSuccessAction.create(data)),
           catchError(error => of(this.loadFailAction.create(error))),
         )),
@@ -58,22 +58,22 @@ export class HostService {
 
   private handleLoadSuccess(): ActionHandler<HostState, HostData> {
     return {
-      state: (state, action) => ({
+      state: (state, data) => ({
         ...state,
         loading: false,
         loaded: true,
-        data: action.payload,
+        data,
       }),
     };
   }
 
   private handleLoadFail(): ActionHandler<HostState, HttpErrorResponse | null> {
     return {
-      state: (state, action) => ({
+      state: (state, error) => ({
         ...state,
         loading: false,
         loaded: true,
-        error: action.payload,
+        error,
       }),
     };
   }

@@ -1,5 +1,5 @@
 import { BehaviorSubject, noop, Observable, Subject, Subscription } from 'rxjs';
-import { filter, tap } from 'rxjs/operators';
+import { filter, map, tap } from 'rxjs/operators';
 import { Action, isAction, NoAction } from './action';
 import { ActionDef } from './action-def';
 import { ActionHandler, StateReducer } from './action-handler';
@@ -24,8 +24,9 @@ export class LocalStore<S> extends Observable<S> {
     const sub = this.actions
       .pipe(
         filter(action => action.type === actionDef.type),
+        map(action => action.payload),
         handler.state
-          ? tap(action => this.updateState(action, handler.state))
+          ? tap(payload => this.updateState(payload, handler.state))
           : tap(noop),
         handler.action
           ? handler.action
@@ -51,8 +52,8 @@ export class LocalStore<S> extends Observable<S> {
     this.subs.forEach(sub => sub.unsubscribe());
   }
 
-  private updateState<P>(action: Action<P>, reduce: StateReducer<S, P>) {
-    const newState = reduce(this.state.getValue(), action);
+  private updateState<P>(payload: P, reduce: StateReducer<S, P>) {
+    const newState = reduce(this.state.getValue(), payload);
     this.state.next(newState);
   }
 
