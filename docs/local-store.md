@@ -146,7 +146,161 @@ export class YourComponent {
 
 
 # Service
-*Managing state* is what Service should be doing.
+Service creates and manage state. It also expose public method which can change state.
+
+
+## LocalStoreFactory
+Service create state by injecting `LocalStoreFactory` and calling it `create` method.
+
+```typescript
+import { LocalStoreFactory } from '@ng-bucket/local-store'
+
+interface YourState {
+  value: string
+}
+
+const INITIAL_STATE: YourState = {
+  value: 'SOME_INITIAL_VALUE'
+};
+
+@Injectable()
+export class YourService {
+  constructor(private localStoreFactory: LocalStoreFactory<YourState>) { }
+
+  private readonly store = this.localStoreFactory.create(INITIAL_STATE);
+  
+  //...
+}
+```
+
+`LocalStoreFactory` also tracks all created states and dispose them when host component is destroyed. 
+So your service does not have to handle it.  
+
+
+
+## State changes
+Once state is created your service should expose it's properties through `Observables`, aka state slices. 
+State itself is `Observable` so all you need to do it `pipe` it.
+
+```typescript
+import { select } from '@ng-bucket/local-store'
+
+interface YourState {
+  loading: boolean;
+  error: HttpErrorResponse | null;
+  data: string | null
+}
+
+const INITIAL_STATE: YourState = {
+  loading: false,
+  error: null,
+  data: null,
+};
+
+@Injectable()
+export class YourService {
+  //...
+  private readonly store = this.localStoreFactory.create(INITIAL_STATE);
+    
+  readonly loading$ = this.store.pipe(select(state => state.loading));
+  readonly error$ = this.store.pipe(select(state => state.error));
+  readonly data$ = this.store.pipe(select(state => state.data));
+  
+  //...
+}
+```
+
+Notice custom `select` operator!. It is convenient way to access state properties as it memoize values and emit values only if value changed.
+It is important because state has to be immutable, as a consequence each change to the state create new state object. 
+Generally new state is created from old one, moving references from old to new state object. 
+So if state changed, but observed state property does not, then `select` operator will not emit new value.
+
+
+
+## Actions
+Actions triggers state changes and / or are used to perform side effects, ex. http request. 
+
+You create them by calling `action<P>()` method on you state. 
+It expects 2 arguments:
+ * `actionType: string` - unique string
+ * `actionHandler: ActionHandler<YourState, P>` - side effects, ex. http request
+and returns `ActionDef<P>` object.
+
+`ActionDef<P>` has 2 methods:
+* `create(params: P)` - creates `Action` object (use in side effect)
+* `dispatch(params: P)` - dispatches actual action (use outside of side effects)
+
+```typescript
+import { ActionHandler } from '@ng-bucket/local-store'
+
+interface YourState {
+  loading: boolean;
+  error: HttpErrorResponse | null;
+  data: DataFromBackend
+}
+
+//...
+
+@Injectable()
+export class YourService {
+  //...
+  private readonly store = this.localStoreFactory.create(INITIAL_STATE);
+
+  //Creating actions
+  private readonly loadAction = this.store.action<number>('LOAD', this.handleLoad());
+  private readonly loadSuccessAction = this.store.action<DataFromBackend>('LOAD_SUCCESS', this.handleLoadSuccess());
+  private readonly loadFailAction = this.store.action<HttpErrorResponse>('LOAD_FAIL', this.handleLoadFail());
+  
+  //...
+  
+  //Public API
+  load(id: number) {
+    this.loadAction.dispatch(id);
+  }
+  
+  //...
+  
+  //Action handlers
+  private handleLoad(): ActionHandler<YourState, number> {
+    return {
+      state: state => ({
+        ...state,
+        loading: true,
+        error: null
+      }),
+      action: pipe(
+        switchMap(id => this.http.get<DataFromBackend>(`data/${id}`).pipe(
+          map(data => this.loadSuccessAction.create(data)),
+          catchError(error => of(this.loadFailAction.create(error))),
+        )),
+      ),
+    };
+  }
+
+  private handleLoadSuccess(): ActionHandler<YourState, DataFromBackend> {
+    return {
+      state: (state, data) => ({
+        ...state,
+        loading: false,
+        loaded: true,
+        data,
+      }),
+    };
+  }
+
+  private handleLoadFail(): ActionHandler<YourState, HttpErrorResponse> {
+    return {
+      state: (state, error) => ({
+        ...state,
+        loading: false,
+        loaded: true,
+        error,
+      }),
+    };
+  }
+}
+```
+
 
 
 
@@ -229,155 +383,3 @@ Everything else will happens in service:
    * emitting `Employee` object on `employee$`, if response succeed
    * emitting error object on `error$`, if response failed
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-# TODO: remove!
-
-### Separation of concern
-
-`EmployeeService` injects `LocalStateFactory` which is used to create `LocalState` and stored in private variable.
-
-```typescript
-// employee.service.ts
-
-import { Injectable } from '@angular/core'
-import { LocalStoreFactory } from '@ng-bucket/local-store'
-
-interface EmployeeState { /* state fields */ }
-
-const INITIAL_STATE: EmployeeState = { /* initial state */ };
-
-@Injectable()
-export class EmployeeService {
-  constructor(private localStoreFactory: LocalStoreFactory<EmployeeState>) { }
-
-  private readonly store = this.localStoreFactory.create(INITIAL_STATE);
-  
-  // ...
-}
-```
-
-Notice `@Injectable()` without `{providedIn: 'root'}`, this is intentional because `EmployeeService` should be provided in 
-`EmployeeComponent`, aka lives as long as `EmployeeComponent`.
-
-```typescript
-// employee.component.ts
-
-import { Component } from '@angular/core'
-import { EmployeeService } from './employee.sercive'
-import { localStoreService } from '@ng-bucket/local-store'
-
-@Component({
-  selector: 'app-employee',
-  templateUrl: './employee.component.html',
-  styleUrls: ['./employee.component.scss'],
-  providers: [localStoreService(EmployeeService)],
-})
-export class EmployeeComponent { /* some staff */ }
-```
-
-`localStoreService` is utility function which provides both `EmployeeService` and `LocalStoreFactory`. 
-
-Usage of `providers: [localStoreService(EmployeeService)]` is equal to `providers: [LocalStoreFactory, EmployeeService]`. 
-You can use what suits you best, but `localStoreService` is recommended as it hides required configuration.
-
-
-### State "user"
-Before you start implementing you state management, you should first consider:
- * [what you need from state?](#what-you-need-from-state)
- * [what actions you will be performing?](#what-actions-you-will-be-performing)
-
-#### What you need from state?
-So assuming `EmployeeComponent` will only be displaying `Employee` data based on `id`, you will need four `Observables`:
- * `loaded$: Observable<boolean>` - indicates if `Employee` is loaded
- * `loading$: Observable<boolean>` - indicates if request is pending
- * `error$: Observable<HttpErrorResponse | null>` - errors from backed
- * `employee$: Observable<Employee>` - actual `Employee` data 
- 
-```typescript
-// employee.component.ts
-
-import { Component, OnInit } from '@angular/core'
-import { HttpErrorResponse } from '@angular/common/http';
-import { localStoreService } from '@ng-bucket/local-store'
-import { Observable } from 'rxjs'
-import { EmployeeService } from './employee.sercive'
-
-@Component({
-  selector: 'app-employee',
-  templateUrl: './employee.component.html',
-  styleUrls: ['./employee.component.scss'],
-  providers: [localStoreService(EmployeeService)],
-})
-export class EmployeeComponent implements OnInit { 
-  constructor(private service: EmployeeService) {}
-  
-  loaded$: Observable<boolean>;
-  loading$: Observable<boolean>;
-  error$: Observable<HttpErrorResponse | null>;
-  employee$: Observable<Employee>;
-  
-  ngOnInit() {
-    this.loaded$ = this.service.loaded$;
-    this.loading$ = this.service.loading$;
-    this.error$ = this.service.error$;
-    this.employee$ = this.service.employee$;
-  }
-  
-  // ...
- }
-```
-
-Now we know fields (state slice) which `EmployeeService` should expose.
-
-#### What actions you will be performing?
-As `EmployeeComponent` will be loading `Employee` data by id, it needs one function:
- * `load(id: number)` 
-
-
-```typescript
-// employee.component.ts
-
-import { Component, OnInit } from '@angular/core'
-import { HttpErrorResponse } from '@angular/common/http';
-import { localStoreService } from '@ng-bucket/local-store'
-import { Observable } from 'rxjs'
-import { EmployeeService } from './employee.sercive'
-
-@Component({
-  selector: 'app-employee',
-  templateUrl: './employee.component.html',
-  styleUrls: ['./employee.component.scss'],
-  providers: [localStoreService(EmployeeService)],
-})
-export class EmployeeComponent implements OnInit { 
-  constructor(private service: EmployeeService) {}
-  
-  loaded$: Observable<boolean>;
-  loading$: Observable<boolean>;
-  error$: Observable<HttpErrorResponse | null>;
-  employee$: Observable<Employee>;
-  
-  ngOnInit() {
-    this.loaded$ = this.service.loaded$;
-    this.loading$ = this.service.loading$;
-    this.error$ = this.service.error$;
-    this.employee$ = this.service.employee$;
-  }
-  
-  load(id: number) {
-    this.service.load(id);
-  }
- }
-```
