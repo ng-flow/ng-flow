@@ -1,10 +1,23 @@
-# LocalState
+# @ng-bucket/local-store
 
-This package allows to create local component state, which lives as long as component. It also encourage you to create
-[push based service](#push-based-service), which is responsible for managing that state.
-
-It concept is based on [NgRx](https://github.com/ngrx/platform) (but does not require it).
-It is also simplified as I tried to be able to keep all logic in single file (in NgRx you often create 3-4 files per state).
+* [Installation](#installation)
+* [What is Store?](#what-is-store)
+* [Motivation](#motivation)
+* [Separation of concern](#separation-of-concern)
+  * [Folder structure](#folder-structure)
+* [Service](#service)
+  * [Push based service](#push-based-service)
+  * [Providing](#providing)
+  * [LocalStoreFactory](#localstorefactory)
+  * [LocalStore](#localstore)
+  * [State slices](#state-slices)
+  * [Actions](#actions)
+  * [Dispatching action](#dispatching-action)
+* [Component](#component)
+  * [Listening for changes](#listening-for-changes)
+  * [Invoking methods](#invoking-methods)
+* [API](#api)
+* [Example](#example)
 
 
 
@@ -17,35 +30,39 @@ Peer dependencies:
 
 
 
-# Push based service
-On ng-conf 2019, Thomas Burleson defined `push based service` in comparison to `pull based service`. 
-He explained it on his presentation [Before NgRx: Superpowers with RxJS + Facades](https://www.youtube.com/watch?v=h-F5uYM69a4&list=PLOETEcp3DkCpimylVKTDe968yNmNIajlR&index=53)
-which I definitely recommend you to watch :smile:
+# What is Store?
+For those who came from [NgRx](http://ngrx.io) or any other state management approach, _Store_ should not be anything new. But if it is your first concat with it, then this is a brief explanation :simple_smile:
 
-In brief, in `push based service` architecture you create a service which expose `Observables` (state changes) and methods which, under the hood, change state.
-As result you *indirectly* changing state and listening for that changes. 
+_Store_ is a container of _State_ and it is used to dispatch an _Actions_, where:
+* _State_ is read-only object which holds your data
+* _Action_ is object which describes you intent, ex. loading data from backend
+
+_State_ has 3 principles:
+ * is single source of truth
+ > Data are stored in _State_ (ex. data loaded from backend) instead of in _Component_
+ 
+ * is read-only
+ > Changes are made by creating new _State_ (from old one) with new values
+ 
+ * changes are made through _Actions_
+ > _State_ cannot be changed directly
 
 
 
-# Table of contents
-* [Separation of concern](#separation-of-concern)
-* [Folder structure](#folder-structure)
-* [Component](#component)
-  * [Providers](#providers)
-  * [Reacting to state changes](#reacting-to-state-changes)
-  * [Delegating actions](#delegating-actions)
-* [Service](#service)
-* [Example](#example)
+# Motivation
+_State_ is also a global object, which is bad if you data has sense as long as your Component lives. In that case when Component is destroyed some _State_ data has to be cleared and you have do it :disappointed:
+
+This is way `@ng-bucket/local-store` was created. Instead of creating a global _State_, it creates _LocalState_ which is also automatically destroyed when Component is destroyed.
 
 
 
 # Separation of concern
-Separation of concern is important, because "use of state" is not equal to "managing state". Therefore the two should be splitted.  
-This is why you should always create a Component (which use state) and Service (which manage that state).
+Separation of concern is important, because "use of _State_" is not equal to "managing _State_". Therefore the two should be splitted. 
 
+ * "use of _State_" is for Component, it will listen to _State_ changes, and for ex. show / hide elements accordingly
+ * "managing _State_" is for Service, it will create _State_ and handle _Actions_
 
-
-# Folder structure
+## Folder structure
 Service and Component should be next each other:
 ```
  +- your-component
@@ -56,15 +73,12 @@ Service and Component should be next each other:
 ```
 
 
-# Component
-Component listen for state changes and react to it, ex. shows loading indicator when request is pending and hides it 
-when response returns. Component also calls Service methods which triggers state changes, ex. calling `service.load(1234)`, 
-triggers load request and changing `state.loading` property to `true`, when response returns`state.loading` is set to 
-`false` and `state.data` is set to what response returns.
+# Service
+As said above Service is responsible for managing _State_, it means it has to:
+* create & update _State_
+* handle _Actions_
 
-
-
-## Providers
+## Providing
 State has to be bound to component lifecycle, by that I mean it has to be created when component is created and destroyed 
 when component is destroyed. But "creating" and "destroying" is part of managing state which has to be done is Service. 
 Therefore Service itself has to be bound to Component lifecycle. To achieve it Component has to provide Service.
@@ -82,71 +96,6 @@ import { YourService } from './your-component.service'
 })
 export class YourComponent {/* ... */}
 ```
-
-
-
-## Reacting to state changes
-Each time state changes, Service will emit that changes throughout `Observables` properties. Component should subscribe 
-to that changes, ideally by `async` pipe.
-
-```typescript
-import { YourService } from './your-component.service'
-
-@Component({
-  // ...
-  template: `
-  <div *ngIf="loading$ | async">Loading...</div>
-  <div *ngIf="error$ | async as error">Error: {{error}}</div>
-  
-  <ng-container *ngIf="data$ | async as data">
-    <some-component [data]="data"></some-component>
-  </ng-container>
-  `
-})
-export class YourComponent implements OnInit {
-  constructor(private service: YourService) {}
-  
-  loading$: Observable<boolean>
-  error$: Observable<HttpErrorResponse | null>
-  data$: Observable<YourData>
-  
-  ngOnInit() {
-    this.loading$ = this.service.loading$;
-    this.error$ = this.service.error$;
-    this.data$ = this.service.data$;
-  }
-}
-```
-
-
-
-
-## Delegating actions
-State changes usually are made by user events, like clicking on a button. Those events have to be handled by a Component 
-and delegated to Service method.
-
-```typescript
-import { YourService } from './your-component.service'
-
-@Component({
-  // ...
-  template: '<button type="button" (click)="handleClick()">Refresh</div>'
-})
-export class YourComponent {
-  constructor(private service: YourService) {}
-  
-  //...
-  
-  handleClick() {
-    this.service.refresh();
-  }
-}
-```
-
-
-
-# Service
-Service creates and manage state. It also expose public method which can change state.
 
 
 ## LocalStoreFactory
@@ -178,7 +127,11 @@ So your service does not have to handle it.
 
 
 
-## State changes
+## LocalStore
+
+
+
+## State slices
 Once state is created your service should expose it's properties through `Observables`, aka state slices. 
 State itself is `Observable` so all you need to do it `pipe` it.
 
@@ -302,6 +255,77 @@ export class YourService {
 ```
 
 
+
+## Dispatching action
+
+
+
+# Component
+Component listen for state changes and react to it, ex. shows loading indicator when request is pending and hides it 
+when response returns. Component also calls Service methods which triggers state changes, ex. calling `service.load(1234)`, 
+triggers load request and changing `state.loading` property to `true`, when response returns`state.loading` is set to 
+`false` and `state.data` is set to what response returns.
+
+
+
+
+## Listening for changes
+Each time state changes, Service will emit that changes throughout `Observables` properties. Component should subscribe 
+to that changes, ideally by `async` pipe.
+
+```typescript
+import { YourService } from './your-component.service'
+
+@Component({
+  // ...
+  template: `
+  <div *ngIf="loading$ | async">Loading...</div>
+  <div *ngIf="error$ | async as error">Error: {{error}}</div>
+  
+  <ng-container *ngIf="data$ | async as data">
+    <some-component [data]="data"></some-component>
+  </ng-container>
+  `
+})
+export class YourComponent implements OnInit {
+  constructor(private service: YourService) {}
+  
+  loading$: Observable<boolean>
+  error$: Observable<HttpErrorResponse | null>
+  data$: Observable<YourData>
+  
+  ngOnInit() {
+    this.loading$ = this.service.loading$;
+    this.error$ = this.service.error$;
+    this.data$ = this.service.data$;
+  }
+}
+```
+
+
+
+
+## Invoking methods
+State changes usually are made by user events, like clicking on a button. Those events have to be handled by a Component 
+and delegated to Service method.
+
+```typescript
+import { YourService } from './your-component.service'
+
+@Component({
+  // ...
+  template: '<button type="button" (click)="handleClick()">Refresh</div>'
+})
+export class YourComponent {
+  constructor(private service: YourService) {}
+  
+  //...
+  
+  handleClick() {
+    this.service.refresh();
+  }
+}
+```
 
 
 # Example
