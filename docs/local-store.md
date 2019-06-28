@@ -57,7 +57,7 @@ This is way `@ng-bucket/local-store` was created. Instead of creating a global _
 
 
 # Separation of concern
-Separation of concern is important, because "use of _State_" is not equal to "managing _State_". Therefore the two should be splitted. 
+Notice that "use of _State_" is not equal to "managing _State_". Therefore the two should be seperated. 
 
  * "use of _State_" is for Component, it will listen to _State_ changes, and for ex. show / hide elements accordingly
  * "managing _State_" is for Service, it will create _State_ and handle _Actions_
