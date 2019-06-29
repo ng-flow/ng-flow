@@ -6,7 +6,6 @@
 * [Separation of concern](#separation-of-concern)
   * [Folder structure](#folder-structure)
 * [Service](#service)
-  * [Push based service](#push-based-service)
   * [Providing](#providing)
   * [LocalStoreFactory](#localstorefactory)
   * [LocalStore](#localstore)
@@ -79,19 +78,14 @@ As said above Service is responsible for managing _State_, it means it has to:
 * handle _Actions_
 
 ## Providing
-State has to be bound to component lifecycle, by that I mean it has to be created when component is created and destroyed 
-when component is destroyed. But "creating" and "destroying" is part of managing state which has to be done is Service. 
-Therefore Service itself has to be bound to Component lifecycle. To achieve it Component has to provide Service.
+Service has to be __provided in Component__. This autmatyclly creates and destroys Service when Component is created / destroyed and thanks to it _LocalStore_ can be disposed. But that not all, providing Service in Component means that each Component will have its own private Service. This is crucial because each Component must have its own _LocalStore_.
 
-To provide Service use `localStoreService(Type)` utility function. It has single argument which has to be you Service.
-Under the hood this function also provides `LocalStoreFactory` which your Service will inject to create `LocalStore`.
+To provide Service, use `localStoreService()` utility function. It has one argument which is type of your Service.
 
 ```typescript
 import { localStoreService } from '@ng-bucket/local-store'
-import { YourService } from './your-component.service'
 
 @Component({
-  // ...
   providers: [localStoreService(YourService)]
 })
 export class YourComponent {/* ... */}
@@ -99,17 +93,23 @@ export class YourComponent {/* ... */}
 
 
 ## LocalStoreFactory
-Service create state by injecting `LocalStoreFactory` and calling it `create` method.
+_LocalStoreFactory_ is class which is provided along side with your Service when using `localStoreService()` utility function and your Service has to inject it. _LocalStoreFactory<T>_ is generic class and as its type has to be an interface which describes your state. It enables type-safety and IDE autocompletion.
+
+_LocalStoreFactory_ creates _LocalStore_ by calling its `create(initialState: T)` method. This method expect one argument which is initial state.
 
 ```typescript
 import { LocalStoreFactory } from '@ng-bucket/local-store'
 
 interface YourState {
-  value: string
+  value1: string
+  value2: number
+  value3: boolean
 }
 
 const INITIAL_STATE: YourState = {
-  value: 'SOME_INITIAL_VALUE'
+  value1: 'SOME_INITIAL_VALUE'
+  value2: 100
+  value3: true
 };
 
 @Injectable()
@@ -117,13 +117,8 @@ export class YourService {
   constructor(private localStoreFactory: LocalStoreFactory<YourState>) { }
 
   private readonly store = this.localStoreFactory.create(INITIAL_STATE);
-  
-  //...
 }
 ```
-
-`LocalStoreFactory` also tracks all created states and dispose them when host component is destroyed. 
-So your service does not have to handle it.  
 
 
 
