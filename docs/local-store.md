@@ -323,6 +323,11 @@ export class YourComponent {
 ```
 
 
+
+# API
+
+
+
 # Example
 Lets assume we have `EmployeeListComponent` which displays list of employees by name and by clicking on particular list item
 we want to show employee details. 
