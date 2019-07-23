@@ -30,20 +30,19 @@ Peer dependencies:
 
 
 # What is Store?
-For those who came from [NgRx](http://ngrx.io) or any other state management approach, _Store_ should not be anything new. But if it is your first concat with it, then this is a brief explanation :simple_smile:
 
-_Store_ is a container of _State_ and it is used to dispatch an _Actions_, where:
-* _State_ is read-only object which holds your data
-* _Action_ is object which describes you intent, ex. loading data from backend
+_Store_ has 2 responsibles:
+* it holds _State_ object
+* and creates and run actions
 
-_State_ has 3 principles:
+and _State_ has 3 principles:
  * is single source of truth
  > Data are stored in _State_ (ex. data loaded from backend) instead of in _Component_
  
  * is read-only
  > Changes are made by creating new _State_ (from old one) with new values
  
- * changes are made through _Actions_
+ * changes are made through actions
  > _State_ cannot be changed directly
 
 
